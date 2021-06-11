@@ -6,8 +6,8 @@
 # https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/#yaml
 # https://learnxinyminutes.com/docs/yaml/
 
-title: Dinesh Kesaboina's Data Science Blog
-description: An easy to use blogging platform with support for Jupyter Notebooks.
+title: "Dinesh's Blog"
+description: Data Science person trying to be a better Data Science person. 
 github_username: iscreampy
 # you can comment the below line out if your repo name is not different than your baseurl
 github_repo: "blog_demo"
