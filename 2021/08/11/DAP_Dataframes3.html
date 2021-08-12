@@ -1,0 +1,5985 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>How to extract data from pd Dataframe (Part I) | Dinesh Kesaboina</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="How to extract data from pd Dataframe (Part I)" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Data Science blog by Dinesh Kesaboina" />
+<meta property="og:description" content="Data Science blog by Dinesh Kesaboina" />
+<link rel="canonical" href="iscreampy.com/2021/08/11/DAP_Dataframes3.html" />
+<meta property="og:url" content="iscreampy.com/2021/08/11/DAP_Dataframes3.html" />
+<meta property="og:site_name" content="Dinesh Kesaboina" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-08-11T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"Data Science blog by Dinesh Kesaboina","url":"iscreampy.com/2021/08/11/DAP_Dataframes3.html","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"iscreampy.com/2021/08/11/DAP_Dataframes3.html"},"headline":"How to extract data from pd Dataframe (Part I)","dateModified":"2021-08-11T00:00:00-05:00","datePublished":"2021-08-11T00:00:00-05:00","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="iscreampy.com/feed.xml" title="Dinesh Kesaboina" /><link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Dinesh Kesaboina</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About Me</a><a class="page-link" href="/search/">Search</a><a class="page-link" href="/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">How to extract data from pd Dataframe (Part I)</h1><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-08-11T00:00:00-05:00" itemprop="datePublished">
+        Aug 11, 2021
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      25 min read
+    
+</span></p>
+
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/iscreampy/blog_demo/tree/master/_notebooks/DAP_Dataframes3.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/iscreampy/blog_demo/master?filepath=_notebooks%2FDAP_Dataframes3.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/iscreampy/blog_demo/blob/master/_notebooks/DAP_Dataframes3.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/DAP_Dataframes3.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./data/jamesbond.csv&#39;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Film</th>
+      <th>Year</th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Dr. No</td>
+      <td>1962</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>448.8</td>
+      <td>7.0</td>
+      <td>0.6</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>From Russia with Love</td>
+      <td>1963</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>543.8</td>
+      <td>12.6</td>
+      <td>1.6</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Goldfinger</td>
+      <td>1964</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>820.4</td>
+      <td>18.6</td>
+      <td>3.2</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Thunderball</td>
+      <td>1965</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>848.1</td>
+      <td>41.9</td>
+      <td>4.7</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Casino Royale</td>
+      <td>1967</td>
+      <td>David Niven</td>
+      <td>Ken Hughes</td>
+      <td>315.0</td>
+      <td>85.0</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="How-to-extract-rows">How to extract rows<a class="anchor-link" href="#How-to-extract-rows"> </a></h2><h3 id="set_index-and-reset_index"><code>set_index</code> and <code>reset_index</code><a class="anchor-link" href="#set_index-and-reset_index"> </a></h3><ul>
+<li><code>read_csv</code> method has an <code>index_col</code> parameter that lets you set an index for your dataframe</li>
+<li>Remember that the index of a dataframe is allowed to have duplicate values. That's what makes a dataframe significantly more powerful than a python dictionary.</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./data/jamesbond.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="s1">&#39;Film&#39;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Year</th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+    <tr>
+      <th>Film</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Dr. No</th>
+      <td>1962</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>448.8</td>
+      <td>7.0</td>
+      <td>0.6</td>
+    </tr>
+    <tr>
+      <th>From Russia with Love</th>
+      <td>1963</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>543.8</td>
+      <td>12.6</td>
+      <td>1.6</td>
+    </tr>
+    <tr>
+      <th>Goldfinger</th>
+      <td>1964</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>820.4</td>
+      <td>18.6</td>
+      <td>3.2</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./data/jamesbond.csv&#39;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Film</th>
+      <th>Year</th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Dr. No</td>
+      <td>1962</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>448.8</td>
+      <td>7.0</td>
+      <td>0.6</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>From Russia with Love</td>
+      <td>1963</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>543.8</td>
+      <td>12.6</td>
+      <td>1.6</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Goldfinger</td>
+      <td>1964</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>820.4</td>
+      <td>18.6</td>
+      <td>3.2</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You can also set the index <em>after</em> loading the dataset as well.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;Film&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Year</th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+    <tr>
+      <th>Film</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Dr. No</th>
+      <td>1962</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>448.8</td>
+      <td>7.0</td>
+      <td>0.6</td>
+    </tr>
+    <tr>
+      <th>From Russia with Love</th>
+      <td>1963</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>543.8</td>
+      <td>12.6</td>
+      <td>1.6</td>
+    </tr>
+    <tr>
+      <th>Goldfinger</th>
+      <td>1964</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>820.4</td>
+      <td>18.6</td>
+      <td>3.2</td>
+    </tr>
+    <tr>
+      <th>Thunderball</th>
+      <td>1965</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>848.1</td>
+      <td>41.9</td>
+      <td>4.7</td>
+    </tr>
+    <tr>
+      <th>Casino Royale</th>
+      <td>1967</td>
+      <td>David Niven</td>
+      <td>Ken Hughes</td>
+      <td>315.0</td>
+      <td>85.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>You Only Live Twice</th>
+      <td>1967</td>
+      <td>Sean Connery</td>
+      <td>Lewis Gilbert</td>
+      <td>514.2</td>
+      <td>59.9</td>
+      <td>4.4</td>
+    </tr>
+    <tr>
+      <th>On Her Majesty's Secret Service</th>
+      <td>1969</td>
+      <td>George Lazenby</td>
+      <td>Peter R. Hunt</td>
+      <td>291.5</td>
+      <td>37.3</td>
+      <td>0.6</td>
+    </tr>
+    <tr>
+      <th>Diamonds Are Forever</th>
+      <td>1971</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>442.5</td>
+      <td>34.7</td>
+      <td>5.8</td>
+    </tr>
+    <tr>
+      <th>Live and Let Die</th>
+      <td>1973</td>
+      <td>Roger Moore</td>
+      <td>Guy Hamilton</td>
+      <td>460.3</td>
+      <td>30.8</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>The Man with the Golden Gun</th>
+      <td>1974</td>
+      <td>Roger Moore</td>
+      <td>Guy Hamilton</td>
+      <td>334.0</td>
+      <td>27.7</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>The Spy Who Loved Me</th>
+      <td>1977</td>
+      <td>Roger Moore</td>
+      <td>Lewis Gilbert</td>
+      <td>533.0</td>
+      <td>45.1</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>Moonraker</th>
+      <td>1979</td>
+      <td>Roger Moore</td>
+      <td>Lewis Gilbert</td>
+      <td>535.0</td>
+      <td>91.5</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>For Your Eyes Only</th>
+      <td>1981</td>
+      <td>Roger Moore</td>
+      <td>John Glen</td>
+      <td>449.4</td>
+      <td>60.2</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>Never Say Never Again</th>
+      <td>1983</td>
+      <td>Sean Connery</td>
+      <td>Irvin Kershner</td>
+      <td>380.0</td>
+      <td>86.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>Octopussy</th>
+      <td>1983</td>
+      <td>Roger Moore</td>
+      <td>John Glen</td>
+      <td>373.8</td>
+      <td>53.9</td>
+      <td>7.8</td>
+    </tr>
+    <tr>
+      <th>A View to a Kill</th>
+      <td>1985</td>
+      <td>Roger Moore</td>
+      <td>John Glen</td>
+      <td>275.2</td>
+      <td>54.5</td>
+      <td>9.1</td>
+    </tr>
+    <tr>
+      <th>The Living Daylights</th>
+      <td>1987</td>
+      <td>Timothy Dalton</td>
+      <td>John Glen</td>
+      <td>313.5</td>
+      <td>68.8</td>
+      <td>5.2</td>
+    </tr>
+    <tr>
+      <th>Licence to Kill</th>
+      <td>1989</td>
+      <td>Timothy Dalton</td>
+      <td>John Glen</td>
+      <td>250.9</td>
+      <td>56.7</td>
+      <td>7.9</td>
+    </tr>
+    <tr>
+      <th>GoldenEye</th>
+      <td>1995</td>
+      <td>Pierce Brosnan</td>
+      <td>Martin Campbell</td>
+      <td>518.5</td>
+      <td>76.9</td>
+      <td>5.1</td>
+    </tr>
+    <tr>
+      <th>Tomorrow Never Dies</th>
+      <td>1997</td>
+      <td>Pierce Brosnan</td>
+      <td>Roger Spottiswoode</td>
+      <td>463.2</td>
+      <td>133.9</td>
+      <td>10.0</td>
+    </tr>
+    <tr>
+      <th>The World Is Not Enough</th>
+      <td>1999</td>
+      <td>Pierce Brosnan</td>
+      <td>Michael Apted</td>
+      <td>439.5</td>
+      <td>158.3</td>
+      <td>13.5</td>
+    </tr>
+    <tr>
+      <th>Die Another Day</th>
+      <td>2002</td>
+      <td>Pierce Brosnan</td>
+      <td>Lee Tamahori</td>
+      <td>465.4</td>
+      <td>154.2</td>
+      <td>17.9</td>
+    </tr>
+    <tr>
+      <th>Casino Royale</th>
+      <td>2006</td>
+      <td>Daniel Craig</td>
+      <td>Martin Campbell</td>
+      <td>581.5</td>
+      <td>145.3</td>
+      <td>3.3</td>
+    </tr>
+    <tr>
+      <th>Quantum of Solace</th>
+      <td>2008</td>
+      <td>Daniel Craig</td>
+      <td>Marc Forster</td>
+      <td>514.2</td>
+      <td>181.4</td>
+      <td>8.1</td>
+    </tr>
+    <tr>
+      <th>Skyfall</th>
+      <td>2012</td>
+      <td>Daniel Craig</td>
+      <td>Sam Mendes</td>
+      <td>943.5</td>
+      <td>170.2</td>
+      <td>14.5</td>
+    </tr>
+    <tr>
+      <th>Spectre</th>
+      <td>2015</td>
+      <td>Daniel Craig</td>
+      <td>Sam Mendes</td>
+      <td>726.7</td>
+      <td>206.3</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;Film&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>If you wanted to undo or <em>reset</em> the index to pandas default numeric index, then...</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Film</th>
+      <th>Year</th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Dr. No</td>
+      <td>1962</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>448.8</td>
+      <td>7.0</td>
+      <td>0.6</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>From Russia with Love</td>
+      <td>1963</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>543.8</td>
+      <td>12.6</td>
+      <td>1.6</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Goldfinger</td>
+      <td>1964</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>820.4</td>
+      <td>18.6</td>
+      <td>3.2</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Thunderball</td>
+      <td>1965</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>848.1</td>
+      <td>41.9</td>
+      <td>4.7</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Casino Royale</td>
+      <td>1967</td>
+      <td>David Niven</td>
+      <td>Ken Hughes</td>
+      <td>315.0</td>
+      <td>85.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>You Only Live Twice</td>
+      <td>1967</td>
+      <td>Sean Connery</td>
+      <td>Lewis Gilbert</td>
+      <td>514.2</td>
+      <td>59.9</td>
+      <td>4.4</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>On Her Majesty's Secret Service</td>
+      <td>1969</td>
+      <td>George Lazenby</td>
+      <td>Peter R. Hunt</td>
+      <td>291.5</td>
+      <td>37.3</td>
+      <td>0.6</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Diamonds Are Forever</td>
+      <td>1971</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>442.5</td>
+      <td>34.7</td>
+      <td>5.8</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Live and Let Die</td>
+      <td>1973</td>
+      <td>Roger Moore</td>
+      <td>Guy Hamilton</td>
+      <td>460.3</td>
+      <td>30.8</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>The Man with the Golden Gun</td>
+      <td>1974</td>
+      <td>Roger Moore</td>
+      <td>Guy Hamilton</td>
+      <td>334.0</td>
+      <td>27.7</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>The Spy Who Loved Me</td>
+      <td>1977</td>
+      <td>Roger Moore</td>
+      <td>Lewis Gilbert</td>
+      <td>533.0</td>
+      <td>45.1</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Moonraker</td>
+      <td>1979</td>
+      <td>Roger Moore</td>
+      <td>Lewis Gilbert</td>
+      <td>535.0</td>
+      <td>91.5</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>For Your Eyes Only</td>
+      <td>1981</td>
+      <td>Roger Moore</td>
+      <td>John Glen</td>
+      <td>449.4</td>
+      <td>60.2</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Never Say Never Again</td>
+      <td>1983</td>
+      <td>Sean Connery</td>
+      <td>Irvin Kershner</td>
+      <td>380.0</td>
+      <td>86.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>Octopussy</td>
+      <td>1983</td>
+      <td>Roger Moore</td>
+      <td>John Glen</td>
+      <td>373.8</td>
+      <td>53.9</td>
+      <td>7.8</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>A View to a Kill</td>
+      <td>1985</td>
+      <td>Roger Moore</td>
+      <td>John Glen</td>
+      <td>275.2</td>
+      <td>54.5</td>
+      <td>9.1</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>The Living Daylights</td>
+      <td>1987</td>
+      <td>Timothy Dalton</td>
+      <td>John Glen</td>
+      <td>313.5</td>
+      <td>68.8</td>
+      <td>5.2</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>Licence to Kill</td>
+      <td>1989</td>
+      <td>Timothy Dalton</td>
+      <td>John Glen</td>
+      <td>250.9</td>
+      <td>56.7</td>
+      <td>7.9</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>GoldenEye</td>
+      <td>1995</td>
+      <td>Pierce Brosnan</td>
+      <td>Martin Campbell</td>
+      <td>518.5</td>
+      <td>76.9</td>
+      <td>5.1</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>Tomorrow Never Dies</td>
+      <td>1997</td>
+      <td>Pierce Brosnan</td>
+      <td>Roger Spottiswoode</td>
+      <td>463.2</td>
+      <td>133.9</td>
+      <td>10.0</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>The World Is Not Enough</td>
+      <td>1999</td>
+      <td>Pierce Brosnan</td>
+      <td>Michael Apted</td>
+      <td>439.5</td>
+      <td>158.3</td>
+      <td>13.5</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>Die Another Day</td>
+      <td>2002</td>
+      <td>Pierce Brosnan</td>
+      <td>Lee Tamahori</td>
+      <td>465.4</td>
+      <td>154.2</td>
+      <td>17.9</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>Casino Royale</td>
+      <td>2006</td>
+      <td>Daniel Craig</td>
+      <td>Martin Campbell</td>
+      <td>581.5</td>
+      <td>145.3</td>
+      <td>3.3</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>Quantum of Solace</td>
+      <td>2008</td>
+      <td>Daniel Craig</td>
+      <td>Marc Forster</td>
+      <td>514.2</td>
+      <td>181.4</td>
+      <td>8.1</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>Skyfall</td>
+      <td>2012</td>
+      <td>Daniel Craig</td>
+      <td>Sam Mendes</td>
+      <td>943.5</td>
+      <td>170.2</td>
+      <td>14.5</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>Spectre</td>
+      <td>2015</td>
+      <td>Daniel Craig</td>
+      <td>Sam Mendes</td>
+      <td>726.7</td>
+      <td>206.3</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Pay attention to the parameters of the <code>reset_index()</code> method here. There is something called <code>drop</code> parameter which lets you drop the previous index. By default it is set to <code>False</code> so you won't see it missing when you reset the index. However, you could delete the old index by changing the <code>drop=True</code> though :)</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Year</th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1962</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>448.8</td>
+      <td>7.0</td>
+      <td>0.6</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1963</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>543.8</td>
+      <td>12.6</td>
+      <td>1.6</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1964</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>820.4</td>
+      <td>18.6</td>
+      <td>3.2</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1965</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>848.1</td>
+      <td>41.9</td>
+      <td>4.7</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1967</td>
+      <td>David Niven</td>
+      <td>Ken Hughes</td>
+      <td>315.0</td>
+      <td>85.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>1967</td>
+      <td>Sean Connery</td>
+      <td>Lewis Gilbert</td>
+      <td>514.2</td>
+      <td>59.9</td>
+      <td>4.4</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>1969</td>
+      <td>George Lazenby</td>
+      <td>Peter R. Hunt</td>
+      <td>291.5</td>
+      <td>37.3</td>
+      <td>0.6</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>1971</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>442.5</td>
+      <td>34.7</td>
+      <td>5.8</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>1973</td>
+      <td>Roger Moore</td>
+      <td>Guy Hamilton</td>
+      <td>460.3</td>
+      <td>30.8</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>1974</td>
+      <td>Roger Moore</td>
+      <td>Guy Hamilton</td>
+      <td>334.0</td>
+      <td>27.7</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>1977</td>
+      <td>Roger Moore</td>
+      <td>Lewis Gilbert</td>
+      <td>533.0</td>
+      <td>45.1</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>1979</td>
+      <td>Roger Moore</td>
+      <td>Lewis Gilbert</td>
+      <td>535.0</td>
+      <td>91.5</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>1981</td>
+      <td>Roger Moore</td>
+      <td>John Glen</td>
+      <td>449.4</td>
+      <td>60.2</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>1983</td>
+      <td>Sean Connery</td>
+      <td>Irvin Kershner</td>
+      <td>380.0</td>
+      <td>86.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>1983</td>
+      <td>Roger Moore</td>
+      <td>John Glen</td>
+      <td>373.8</td>
+      <td>53.9</td>
+      <td>7.8</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>1985</td>
+      <td>Roger Moore</td>
+      <td>John Glen</td>
+      <td>275.2</td>
+      <td>54.5</td>
+      <td>9.1</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>1987</td>
+      <td>Timothy Dalton</td>
+      <td>John Glen</td>
+      <td>313.5</td>
+      <td>68.8</td>
+      <td>5.2</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>1989</td>
+      <td>Timothy Dalton</td>
+      <td>John Glen</td>
+      <td>250.9</td>
+      <td>56.7</td>
+      <td>7.9</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>1995</td>
+      <td>Pierce Brosnan</td>
+      <td>Martin Campbell</td>
+      <td>518.5</td>
+      <td>76.9</td>
+      <td>5.1</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>1997</td>
+      <td>Pierce Brosnan</td>
+      <td>Roger Spottiswoode</td>
+      <td>463.2</td>
+      <td>133.9</td>
+      <td>10.0</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>1999</td>
+      <td>Pierce Brosnan</td>
+      <td>Michael Apted</td>
+      <td>439.5</td>
+      <td>158.3</td>
+      <td>13.5</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>2002</td>
+      <td>Pierce Brosnan</td>
+      <td>Lee Tamahori</td>
+      <td>465.4</td>
+      <td>154.2</td>
+      <td>17.9</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>2006</td>
+      <td>Daniel Craig</td>
+      <td>Martin Campbell</td>
+      <td>581.5</td>
+      <td>145.3</td>
+      <td>3.3</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>2008</td>
+      <td>Daniel Craig</td>
+      <td>Marc Forster</td>
+      <td>514.2</td>
+      <td>181.4</td>
+      <td>8.1</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>2012</td>
+      <td>Daniel Craig</td>
+      <td>Sam Mendes</td>
+      <td>943.5</td>
+      <td>170.2</td>
+      <td>14.5</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>2015</td>
+      <td>Daniel Craig</td>
+      <td>Sam Mendes</td>
+      <td>726.7</td>
+      <td>206.3</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Year</th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+    <tr>
+      <th>Film</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Dr. No</th>
+      <td>1962</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>448.8</td>
+      <td>7.0</td>
+      <td>0.6</td>
+    </tr>
+    <tr>
+      <th>From Russia with Love</th>
+      <td>1963</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>543.8</td>
+      <td>12.6</td>
+      <td>1.6</td>
+    </tr>
+    <tr>
+      <th>Goldfinger</th>
+      <td>1964</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>820.4</td>
+      <td>18.6</td>
+      <td>3.2</td>
+    </tr>
+    <tr>
+      <th>Thunderball</th>
+      <td>1965</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>848.1</td>
+      <td>41.9</td>
+      <td>4.7</td>
+    </tr>
+    <tr>
+      <th>Casino Royale</th>
+      <td>1967</td>
+      <td>David Niven</td>
+      <td>Ken Hughes</td>
+      <td>315.0</td>
+      <td>85.0</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can see clearly that <code>Film</code> column is the index for this dataframe. Now let's say you want to set someother column as the index (say <code>Year</code>) and <em>not</em> <code>Film</code>. We could do this:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;Year&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+    <tr>
+      <th>Year</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1962</th>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>448.8</td>
+      <td>7.0</td>
+      <td>0.6</td>
+    </tr>
+    <tr>
+      <th>1963</th>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>543.8</td>
+      <td>12.6</td>
+      <td>1.6</td>
+    </tr>
+    <tr>
+      <th>1964</th>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>820.4</td>
+      <td>18.6</td>
+      <td>3.2</td>
+    </tr>
+    <tr>
+      <th>1965</th>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>848.1</td>
+      <td>41.9</td>
+      <td>4.7</td>
+    </tr>
+    <tr>
+      <th>1967</th>
+      <td>David Niven</td>
+      <td>Ken Hughes</td>
+      <td>315.0</td>
+      <td>85.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1967</th>
+      <td>Sean Connery</td>
+      <td>Lewis Gilbert</td>
+      <td>514.2</td>
+      <td>59.9</td>
+      <td>4.4</td>
+    </tr>
+    <tr>
+      <th>1969</th>
+      <td>George Lazenby</td>
+      <td>Peter R. Hunt</td>
+      <td>291.5</td>
+      <td>37.3</td>
+      <td>0.6</td>
+    </tr>
+    <tr>
+      <th>1971</th>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>442.5</td>
+      <td>34.7</td>
+      <td>5.8</td>
+    </tr>
+    <tr>
+      <th>1973</th>
+      <td>Roger Moore</td>
+      <td>Guy Hamilton</td>
+      <td>460.3</td>
+      <td>30.8</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1974</th>
+      <td>Roger Moore</td>
+      <td>Guy Hamilton</td>
+      <td>334.0</td>
+      <td>27.7</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1977</th>
+      <td>Roger Moore</td>
+      <td>Lewis Gilbert</td>
+      <td>533.0</td>
+      <td>45.1</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1979</th>
+      <td>Roger Moore</td>
+      <td>Lewis Gilbert</td>
+      <td>535.0</td>
+      <td>91.5</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1981</th>
+      <td>Roger Moore</td>
+      <td>John Glen</td>
+      <td>449.4</td>
+      <td>60.2</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1983</th>
+      <td>Sean Connery</td>
+      <td>Irvin Kershner</td>
+      <td>380.0</td>
+      <td>86.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1983</th>
+      <td>Roger Moore</td>
+      <td>John Glen</td>
+      <td>373.8</td>
+      <td>53.9</td>
+      <td>7.8</td>
+    </tr>
+    <tr>
+      <th>1985</th>
+      <td>Roger Moore</td>
+      <td>John Glen</td>
+      <td>275.2</td>
+      <td>54.5</td>
+      <td>9.1</td>
+    </tr>
+    <tr>
+      <th>1987</th>
+      <td>Timothy Dalton</td>
+      <td>John Glen</td>
+      <td>313.5</td>
+      <td>68.8</td>
+      <td>5.2</td>
+    </tr>
+    <tr>
+      <th>1989</th>
+      <td>Timothy Dalton</td>
+      <td>John Glen</td>
+      <td>250.9</td>
+      <td>56.7</td>
+      <td>7.9</td>
+    </tr>
+    <tr>
+      <th>1995</th>
+      <td>Pierce Brosnan</td>
+      <td>Martin Campbell</td>
+      <td>518.5</td>
+      <td>76.9</td>
+      <td>5.1</td>
+    </tr>
+    <tr>
+      <th>1997</th>
+      <td>Pierce Brosnan</td>
+      <td>Roger Spottiswoode</td>
+      <td>463.2</td>
+      <td>133.9</td>
+      <td>10.0</td>
+    </tr>
+    <tr>
+      <th>1999</th>
+      <td>Pierce Brosnan</td>
+      <td>Michael Apted</td>
+      <td>439.5</td>
+      <td>158.3</td>
+      <td>13.5</td>
+    </tr>
+    <tr>
+      <th>2002</th>
+      <td>Pierce Brosnan</td>
+      <td>Lee Tamahori</td>
+      <td>465.4</td>
+      <td>154.2</td>
+      <td>17.9</td>
+    </tr>
+    <tr>
+      <th>2006</th>
+      <td>Daniel Craig</td>
+      <td>Martin Campbell</td>
+      <td>581.5</td>
+      <td>145.3</td>
+      <td>3.3</td>
+    </tr>
+    <tr>
+      <th>2008</th>
+      <td>Daniel Craig</td>
+      <td>Marc Forster</td>
+      <td>514.2</td>
+      <td>181.4</td>
+      <td>8.1</td>
+    </tr>
+    <tr>
+      <th>2012</th>
+      <td>Daniel Craig</td>
+      <td>Sam Mendes</td>
+      <td>943.5</td>
+      <td>170.2</td>
+      <td>14.5</td>
+    </tr>
+    <tr>
+      <th>2015</th>
+      <td>Daniel Craig</td>
+      <td>Sam Mendes</td>
+      <td>726.7</td>
+      <td>206.3</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Notice that this operation dropped our old index by default! This is not what we wanted so let's see how we can fix this...</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;Year&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Film</th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+    <tr>
+      <th>Year</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1962</th>
+      <td>Dr. No</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>448.8</td>
+      <td>7.0</td>
+      <td>0.6</td>
+    </tr>
+    <tr>
+      <th>1963</th>
+      <td>From Russia with Love</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>543.8</td>
+      <td>12.6</td>
+      <td>1.6</td>
+    </tr>
+    <tr>
+      <th>1964</th>
+      <td>Goldfinger</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>820.4</td>
+      <td>18.6</td>
+      <td>3.2</td>
+    </tr>
+    <tr>
+      <th>1965</th>
+      <td>Thunderball</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>848.1</td>
+      <td>41.9</td>
+      <td>4.7</td>
+    </tr>
+    <tr>
+      <th>1967</th>
+      <td>Casino Royale</td>
+      <td>David Niven</td>
+      <td>Ken Hughes</td>
+      <td>315.0</td>
+      <td>85.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1967</th>
+      <td>You Only Live Twice</td>
+      <td>Sean Connery</td>
+      <td>Lewis Gilbert</td>
+      <td>514.2</td>
+      <td>59.9</td>
+      <td>4.4</td>
+    </tr>
+    <tr>
+      <th>1969</th>
+      <td>On Her Majesty's Secret Service</td>
+      <td>George Lazenby</td>
+      <td>Peter R. Hunt</td>
+      <td>291.5</td>
+      <td>37.3</td>
+      <td>0.6</td>
+    </tr>
+    <tr>
+      <th>1971</th>
+      <td>Diamonds Are Forever</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>442.5</td>
+      <td>34.7</td>
+      <td>5.8</td>
+    </tr>
+    <tr>
+      <th>1973</th>
+      <td>Live and Let Die</td>
+      <td>Roger Moore</td>
+      <td>Guy Hamilton</td>
+      <td>460.3</td>
+      <td>30.8</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1974</th>
+      <td>The Man with the Golden Gun</td>
+      <td>Roger Moore</td>
+      <td>Guy Hamilton</td>
+      <td>334.0</td>
+      <td>27.7</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1977</th>
+      <td>The Spy Who Loved Me</td>
+      <td>Roger Moore</td>
+      <td>Lewis Gilbert</td>
+      <td>533.0</td>
+      <td>45.1</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1979</th>
+      <td>Moonraker</td>
+      <td>Roger Moore</td>
+      <td>Lewis Gilbert</td>
+      <td>535.0</td>
+      <td>91.5</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1981</th>
+      <td>For Your Eyes Only</td>
+      <td>Roger Moore</td>
+      <td>John Glen</td>
+      <td>449.4</td>
+      <td>60.2</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1983</th>
+      <td>Never Say Never Again</td>
+      <td>Sean Connery</td>
+      <td>Irvin Kershner</td>
+      <td>380.0</td>
+      <td>86.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1983</th>
+      <td>Octopussy</td>
+      <td>Roger Moore</td>
+      <td>John Glen</td>
+      <td>373.8</td>
+      <td>53.9</td>
+      <td>7.8</td>
+    </tr>
+    <tr>
+      <th>1985</th>
+      <td>A View to a Kill</td>
+      <td>Roger Moore</td>
+      <td>John Glen</td>
+      <td>275.2</td>
+      <td>54.5</td>
+      <td>9.1</td>
+    </tr>
+    <tr>
+      <th>1987</th>
+      <td>The Living Daylights</td>
+      <td>Timothy Dalton</td>
+      <td>John Glen</td>
+      <td>313.5</td>
+      <td>68.8</td>
+      <td>5.2</td>
+    </tr>
+    <tr>
+      <th>1989</th>
+      <td>Licence to Kill</td>
+      <td>Timothy Dalton</td>
+      <td>John Glen</td>
+      <td>250.9</td>
+      <td>56.7</td>
+      <td>7.9</td>
+    </tr>
+    <tr>
+      <th>1995</th>
+      <td>GoldenEye</td>
+      <td>Pierce Brosnan</td>
+      <td>Martin Campbell</td>
+      <td>518.5</td>
+      <td>76.9</td>
+      <td>5.1</td>
+    </tr>
+    <tr>
+      <th>1997</th>
+      <td>Tomorrow Never Dies</td>
+      <td>Pierce Brosnan</td>
+      <td>Roger Spottiswoode</td>
+      <td>463.2</td>
+      <td>133.9</td>
+      <td>10.0</td>
+    </tr>
+    <tr>
+      <th>1999</th>
+      <td>The World Is Not Enough</td>
+      <td>Pierce Brosnan</td>
+      <td>Michael Apted</td>
+      <td>439.5</td>
+      <td>158.3</td>
+      <td>13.5</td>
+    </tr>
+    <tr>
+      <th>2002</th>
+      <td>Die Another Day</td>
+      <td>Pierce Brosnan</td>
+      <td>Lee Tamahori</td>
+      <td>465.4</td>
+      <td>154.2</td>
+      <td>17.9</td>
+    </tr>
+    <tr>
+      <th>2006</th>
+      <td>Casino Royale</td>
+      <td>Daniel Craig</td>
+      <td>Martin Campbell</td>
+      <td>581.5</td>
+      <td>145.3</td>
+      <td>3.3</td>
+    </tr>
+    <tr>
+      <th>2008</th>
+      <td>Quantum of Solace</td>
+      <td>Daniel Craig</td>
+      <td>Marc Forster</td>
+      <td>514.2</td>
+      <td>181.4</td>
+      <td>8.1</td>
+    </tr>
+    <tr>
+      <th>2012</th>
+      <td>Skyfall</td>
+      <td>Daniel Craig</td>
+      <td>Sam Mendes</td>
+      <td>943.5</td>
+      <td>170.2</td>
+      <td>14.5</td>
+    </tr>
+    <tr>
+      <th>2015</th>
+      <td>Spectre</td>
+      <td>Daniel Craig</td>
+      <td>Sam Mendes</td>
+      <td>726.7</td>
+      <td>206.3</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Retrieve-rows-by-index-label-using-.loc[]-accessor">Retrieve rows by index label using <code>.loc[]</code> accessor<a class="anchor-link" href="#Retrieve-rows-by-index-label-using-.loc[]-accessor"> </a></h3>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Year</th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+    <tr>
+      <th>Film</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Dr. No</th>
+      <td>1962</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>448.8</td>
+      <td>7.0</td>
+      <td>0.6</td>
+    </tr>
+    <tr>
+      <th>From Russia with Love</th>
+      <td>1963</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>543.8</td>
+      <td>12.6</td>
+      <td>1.6</td>
+    </tr>
+    <tr>
+      <th>Goldfinger</th>
+      <td>1964</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>820.4</td>
+      <td>18.6</td>
+      <td>3.2</td>
+    </tr>
+    <tr>
+      <th>Thunderball</th>
+      <td>1965</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>848.1</td>
+      <td>41.9</td>
+      <td>4.7</td>
+    </tr>
+    <tr>
+      <th>Casino Royale</th>
+      <td>1967</td>
+      <td>David Niven</td>
+      <td>Ken Hughes</td>
+      <td>315.0</td>
+      <td>85.0</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Tip">Tip<a class="anchor-link" href="#Tip"> </a></h4><ul>
+<li>One optimisation that one can always help in Pandas is to sort the dataframe by the index. </li>
+<li>It is a lot easier for pandas to find a value in a sorted dataframe than it is to find it in a randomly ordered dataframe.</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Year</th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+    <tr>
+      <th>Film</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>A View to a Kill</th>
+      <td>1985</td>
+      <td>Roger Moore</td>
+      <td>John Glen</td>
+      <td>275.2</td>
+      <td>54.5</td>
+      <td>9.1</td>
+    </tr>
+    <tr>
+      <th>Casino Royale</th>
+      <td>2006</td>
+      <td>Daniel Craig</td>
+      <td>Martin Campbell</td>
+      <td>581.5</td>
+      <td>145.3</td>
+      <td>3.3</td>
+    </tr>
+    <tr>
+      <th>Casino Royale</th>
+      <td>1967</td>
+      <td>David Niven</td>
+      <td>Ken Hughes</td>
+      <td>315.0</td>
+      <td>85.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>Diamonds Are Forever</th>
+      <td>1971</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>442.5</td>
+      <td>34.7</td>
+      <td>5.8</td>
+    </tr>
+    <tr>
+      <th>Die Another Day</th>
+      <td>2002</td>
+      <td>Pierce Brosnan</td>
+      <td>Lee Tamahori</td>
+      <td>465.4</td>
+      <td>154.2</td>
+      <td>17.9</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>One can access a row in a Series by its label or its index position by placing that label or index position within square brackets.</li>
+<li>When it comes to a dataframe, we need to preceed that square bracket with a <code>.loc</code> accessor.</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Casino Royale&#39;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Year</th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+    <tr>
+      <th>Film</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Casino Royale</th>
+      <td>2006</td>
+      <td>Daniel Craig</td>
+      <td>Martin Campbell</td>
+      <td>581.5</td>
+      <td>145.3</td>
+      <td>3.3</td>
+    </tr>
+    <tr>
+      <th>Casino Royale</th>
+      <td>1967</td>
+      <td>David Niven</td>
+      <td>Ken Hughes</td>
+      <td>315.0</td>
+      <td>85.0</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Goldfinger&#39;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Year                         1964
+Actor                Sean Connery
+Director             Guy Hamilton
+Box Office                  820.4
+Budget                       18.6
+Bond Actor Salary             3.2
+Name: Goldfinger, dtype: object</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can extract all index labels in between two movies like this</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Diamonds Are Forever&#39;</span><span class="p">:</span><span class="s1">&#39;License To Kill&#39;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Year</th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+    <tr>
+      <th>Film</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Diamonds Are Forever</th>
+      <td>1971</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>442.5</td>
+      <td>34.7</td>
+      <td>5.8</td>
+    </tr>
+    <tr>
+      <th>Die Another Day</th>
+      <td>2002</td>
+      <td>Pierce Brosnan</td>
+      <td>Lee Tamahori</td>
+      <td>465.4</td>
+      <td>154.2</td>
+      <td>17.9</td>
+    </tr>
+    <tr>
+      <th>Dr. No</th>
+      <td>1962</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>448.8</td>
+      <td>7.0</td>
+      <td>0.6</td>
+    </tr>
+    <tr>
+      <th>For Your Eyes Only</th>
+      <td>1981</td>
+      <td>Roger Moore</td>
+      <td>John Glen</td>
+      <td>449.4</td>
+      <td>60.2</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>From Russia with Love</th>
+      <td>1963</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>543.8</td>
+      <td>12.6</td>
+      <td>1.6</td>
+    </tr>
+    <tr>
+      <th>GoldenEye</th>
+      <td>1995</td>
+      <td>Pierce Brosnan</td>
+      <td>Martin Campbell</td>
+      <td>518.5</td>
+      <td>76.9</td>
+      <td>5.1</td>
+    </tr>
+    <tr>
+      <th>Goldfinger</th>
+      <td>1964</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>820.4</td>
+      <td>18.6</td>
+      <td>3.2</td>
+    </tr>
+    <tr>
+      <th>Licence to Kill</th>
+      <td>1989</td>
+      <td>Timothy Dalton</td>
+      <td>John Glen</td>
+      <td>250.9</td>
+      <td>56.7</td>
+      <td>7.9</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Notice how this slicing is different from list slicing. In list slicing, the last value in the slicing is excluded. However, here the last value in the slice is included in the result.</li>
+<li>Building off of list slicing syntax, we can extract slices that skip a few movies by steps.</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Diamonds Are Forever&#39;</span><span class="p">:</span><span class="s1">&#39;License To Kill&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Year</th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+    <tr>
+      <th>Film</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Diamonds Are Forever</th>
+      <td>1971</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>442.5</td>
+      <td>34.7</td>
+      <td>5.8</td>
+    </tr>
+    <tr>
+      <th>Dr. No</th>
+      <td>1962</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>448.8</td>
+      <td>7.0</td>
+      <td>0.6</td>
+    </tr>
+    <tr>
+      <th>From Russia with Love</th>
+      <td>1963</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>543.8</td>
+      <td>12.6</td>
+      <td>1.6</td>
+    </tr>
+    <tr>
+      <th>Goldfinger</th>
+      <td>1964</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>820.4</td>
+      <td>18.6</td>
+      <td>3.2</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>As you can imagine, we can also use other list slicing techniques here. We can pull all data from a given point to the very end of the dataframe</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Quantum of Solace&#39;</span><span class="p">:]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Year</th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+    <tr>
+      <th>Film</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Quantum of Solace</th>
+      <td>2008</td>
+      <td>Daniel Craig</td>
+      <td>Marc Forster</td>
+      <td>514.2</td>
+      <td>181.4</td>
+      <td>8.1</td>
+    </tr>
+    <tr>
+      <th>Skyfall</th>
+      <td>2012</td>
+      <td>Daniel Craig</td>
+      <td>Sam Mendes</td>
+      <td>943.5</td>
+      <td>170.2</td>
+      <td>14.5</td>
+    </tr>
+    <tr>
+      <th>Spectre</th>
+      <td>2015</td>
+      <td>Daniel Craig</td>
+      <td>Sam Mendes</td>
+      <td>726.7</td>
+      <td>206.3</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>The Living Daylights</th>
+      <td>1987</td>
+      <td>Timothy Dalton</td>
+      <td>John Glen</td>
+      <td>313.5</td>
+      <td>68.8</td>
+      <td>5.2</td>
+    </tr>
+    <tr>
+      <th>The Man with the Golden Gun</th>
+      <td>1974</td>
+      <td>Roger Moore</td>
+      <td>Guy Hamilton</td>
+      <td>334.0</td>
+      <td>27.7</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>The Spy Who Loved Me</th>
+      <td>1977</td>
+      <td>Roger Moore</td>
+      <td>Lewis Gilbert</td>
+      <td>533.0</td>
+      <td>45.1</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>The World Is Not Enough</th>
+      <td>1999</td>
+      <td>Pierce Brosnan</td>
+      <td>Michael Apted</td>
+      <td>439.5</td>
+      <td>158.3</td>
+      <td>13.5</td>
+    </tr>
+    <tr>
+      <th>Thunderball</th>
+      <td>1965</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>848.1</td>
+      <td>41.9</td>
+      <td>4.7</td>
+    </tr>
+    <tr>
+      <th>Tomorrow Never Dies</th>
+      <td>1997</td>
+      <td>Pierce Brosnan</td>
+      <td>Roger Spottiswoode</td>
+      <td>463.2</td>
+      <td>133.9</td>
+      <td>10.0</td>
+    </tr>
+    <tr>
+      <th>You Only Live Twice</th>
+      <td>1967</td>
+      <td>Sean Connery</td>
+      <td>Lewis Gilbert</td>
+      <td>514.2</td>
+      <td>59.9</td>
+      <td>4.4</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>You can also extract data from the beginning of the dataframe upto a certain point</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:</span><span class="s1">&#39;GoldenEye&#39;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Year</th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+    <tr>
+      <th>Film</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>A View to a Kill</th>
+      <td>1985</td>
+      <td>Roger Moore</td>
+      <td>John Glen</td>
+      <td>275.2</td>
+      <td>54.5</td>
+      <td>9.1</td>
+    </tr>
+    <tr>
+      <th>Casino Royale</th>
+      <td>2006</td>
+      <td>Daniel Craig</td>
+      <td>Martin Campbell</td>
+      <td>581.5</td>
+      <td>145.3</td>
+      <td>3.3</td>
+    </tr>
+    <tr>
+      <th>Casino Royale</th>
+      <td>1967</td>
+      <td>David Niven</td>
+      <td>Ken Hughes</td>
+      <td>315.0</td>
+      <td>85.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>Diamonds Are Forever</th>
+      <td>1971</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>442.5</td>
+      <td>34.7</td>
+      <td>5.8</td>
+    </tr>
+    <tr>
+      <th>Die Another Day</th>
+      <td>2002</td>
+      <td>Pierce Brosnan</td>
+      <td>Lee Tamahori</td>
+      <td>465.4</td>
+      <td>154.2</td>
+      <td>17.9</td>
+    </tr>
+    <tr>
+      <th>Dr. No</th>
+      <td>1962</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>448.8</td>
+      <td>7.0</td>
+      <td>0.6</td>
+    </tr>
+    <tr>
+      <th>For Your Eyes Only</th>
+      <td>1981</td>
+      <td>Roger Moore</td>
+      <td>John Glen</td>
+      <td>449.4</td>
+      <td>60.2</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>From Russia with Love</th>
+      <td>1963</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>543.8</td>
+      <td>12.6</td>
+      <td>1.6</td>
+    </tr>
+    <tr>
+      <th>GoldenEye</th>
+      <td>1995</td>
+      <td>Pierce Brosnan</td>
+      <td>Martin Campbell</td>
+      <td>518.5</td>
+      <td>76.9</td>
+      <td>5.1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>You can extract more than one index labels from the dataframe like this:</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="s1">&#39;GoldenEye&#39;</span><span class="p">,</span> <span class="s1">&#39;Casino Royale&#39;</span><span class="p">,</span> <span class="s1">&#39;Dr. No&#39;</span><span class="p">]]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Year</th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+    <tr>
+      <th>Film</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>GoldenEye</th>
+      <td>1995</td>
+      <td>Pierce Brosnan</td>
+      <td>Martin Campbell</td>
+      <td>518.5</td>
+      <td>76.9</td>
+      <td>5.1</td>
+    </tr>
+    <tr>
+      <th>Casino Royale</th>
+      <td>2006</td>
+      <td>Daniel Craig</td>
+      <td>Martin Campbell</td>
+      <td>581.5</td>
+      <td>145.3</td>
+      <td>3.3</td>
+    </tr>
+    <tr>
+      <th>Casino Royale</th>
+      <td>1967</td>
+      <td>David Niven</td>
+      <td>Ken Hughes</td>
+      <td>315.0</td>
+      <td>85.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>Dr. No</th>
+      <td>1962</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>448.8</td>
+      <td>7.0</td>
+      <td>0.6</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Retrieve-rows-by-index-position-using-iloc-accessor">Retrieve rows by index position using <code>iloc</code> accessor<a class="anchor-link" href="#Retrieve-rows-by-index-position-using-iloc-accessor"> </a></h3><p>We are going to need the standard numeric pandas index. So we will have to reset the index:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Film                 A View to a Kill
+Year                             1985
+Actor                     Roger Moore
+Director                    John Glen
+Box Office                      275.2
+Budget                           54.5
+Bond Actor Salary                 9.1
+Name: 0, dtype: object</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Remember that we previously sorted the dataframe on the <code>Name</code> index. Hence the first value we retrieve is "A View to a Kill". However let's load the dataframe again using the <code>read_csv</code> function</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./data/jamesbond.csv&#39;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Film</th>
+      <th>Year</th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Dr. No</td>
+      <td>1962</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>448.8</td>
+      <td>7.0</td>
+      <td>0.6</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>From Russia with Love</td>
+      <td>1963</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>543.8</td>
+      <td>12.6</td>
+      <td>1.6</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Goldfinger</td>
+      <td>1964</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>820.4</td>
+      <td>18.6</td>
+      <td>3.2</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Thunderball</td>
+      <td>1965</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>848.1</td>
+      <td>41.9</td>
+      <td>4.7</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Casino Royale</td>
+      <td>1967</td>
+      <td>David Niven</td>
+      <td>Ken Hughes</td>
+      <td>315.0</td>
+      <td>85.0</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Film                        Dr. No
+Year                          1962
+Actor                 Sean Connery
+Director             Terence Young
+Box Office                   448.8
+Budget                           7
+Bond Actor Salary              0.6
+Name: 0, dtype: object</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Similar to <code>loc</code> we can extract multiple rows using a python list like so:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">]]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Film</th>
+      <th>Year</th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Dr. No</td>
+      <td>1962</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>448.8</td>
+      <td>7.0</td>
+      <td>0.6</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>You Only Live Twice</td>
+      <td>1967</td>
+      <td>Sean Connery</td>
+      <td>Lewis Gilbert</td>
+      <td>514.2</td>
+      <td>59.9</td>
+      <td>4.4</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>The Spy Who Loved Me</td>
+      <td>1977</td>
+      <td>Roger Moore</td>
+      <td>Lewis Gilbert</td>
+      <td>533.0</td>
+      <td>45.1</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>A View to a Kill</td>
+      <td>1985</td>
+      <td>Roger Moore</td>
+      <td>John Glen</td>
+      <td>275.2</td>
+      <td>54.5</td>
+      <td>9.1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>As you can guess, we can extract rows between certain index position values as well!</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">8</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Film</th>
+      <th>Year</th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>From Russia with Love</td>
+      <td>1963</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>543.8</td>
+      <td>12.6</td>
+      <td>1.6</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Goldfinger</td>
+      <td>1964</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>820.4</td>
+      <td>18.6</td>
+      <td>3.2</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Thunderball</td>
+      <td>1965</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>848.1</td>
+      <td>41.9</td>
+      <td>4.7</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Casino Royale</td>
+      <td>1967</td>
+      <td>David Niven</td>
+      <td>Ken Hughes</td>
+      <td>315.0</td>
+      <td>85.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>You Only Live Twice</td>
+      <td>1967</td>
+      <td>Sean Connery</td>
+      <td>Lewis Gilbert</td>
+      <td>514.2</td>
+      <td>59.9</td>
+      <td>4.4</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>On Her Majesty's Secret Service</td>
+      <td>1969</td>
+      <td>George Lazenby</td>
+      <td>Peter R. Hunt</td>
+      <td>291.5</td>
+      <td>37.3</td>
+      <td>0.6</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Diamonds Are Forever</td>
+      <td>1971</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>442.5</td>
+      <td>34.7</td>
+      <td>5.8</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="(Difference-between-loc-and-iloc)">(Difference between <code>loc</code> and <code>iloc</code>)<a class="anchor-link" href="#(Difference-between-loc-and-iloc)"> </a></h4><p><strong>Caveat</strong>:
+Notice here that the last row mentioned in the slice will not be included just like a python list slicing!</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">21</span><span class="p">:]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Film</th>
+      <th>Year</th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>21</th>
+      <td>Die Another Day</td>
+      <td>2002</td>
+      <td>Pierce Brosnan</td>
+      <td>Lee Tamahori</td>
+      <td>465.4</td>
+      <td>154.2</td>
+      <td>17.9</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>Casino Royale</td>
+      <td>2006</td>
+      <td>Daniel Craig</td>
+      <td>Martin Campbell</td>
+      <td>581.5</td>
+      <td>145.3</td>
+      <td>3.3</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>Quantum of Solace</td>
+      <td>2008</td>
+      <td>Daniel Craig</td>
+      <td>Marc Forster</td>
+      <td>514.2</td>
+      <td>181.4</td>
+      <td>8.1</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>Skyfall</td>
+      <td>2012</td>
+      <td>Daniel Craig</td>
+      <td>Sam Mendes</td>
+      <td>943.5</td>
+      <td>170.2</td>
+      <td>14.5</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>Spectre</td>
+      <td>2015</td>
+      <td>Daniel Craig</td>
+      <td>Sam Mendes</td>
+      <td>726.7</td>
+      <td>206.3</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Film</th>
+      <th>Year</th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Dr. No</td>
+      <td>1962</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>448.8</td>
+      <td>7.0</td>
+      <td>0.6</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>From Russia with Love</td>
+      <td>1963</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>543.8</td>
+      <td>12.6</td>
+      <td>1.6</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Goldfinger</td>
+      <td>1964</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>820.4</td>
+      <td>18.6</td>
+      <td>3.2</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Thunderball</td>
+      <td>1965</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>848.1</td>
+      <td>41.9</td>
+      <td>4.7</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Casino Royale</td>
+      <td>1967</td>
+      <td>David Niven</td>
+      <td>Ken Hughes</td>
+      <td>315.0</td>
+      <td>85.0</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Note:">Note:<a class="anchor-link" href="#Note:"> </a></h4><p>Integer indexes exist even if your dataframe has its index set to a non-integer index. Let me demonstrate what I mean here:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;Film&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Year</th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+    <tr>
+      <th>Film</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Dr. No</th>
+      <td>1962</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>448.8</td>
+      <td>7.0</td>
+      <td>0.6</td>
+    </tr>
+    <tr>
+      <th>From Russia with Love</th>
+      <td>1963</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>543.8</td>
+      <td>12.6</td>
+      <td>1.6</td>
+    </tr>
+    <tr>
+      <th>Goldfinger</th>
+      <td>1964</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>820.4</td>
+      <td>18.6</td>
+      <td>3.2</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">]]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Year</th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+    <tr>
+      <th>Film</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Dr. No</th>
+      <td>1962</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>448.8</td>
+      <td>7.0</td>
+      <td>0.6</td>
+    </tr>
+    <tr>
+      <th>You Only Live Twice</th>
+      <td>1967</td>
+      <td>Sean Connery</td>
+      <td>Lewis Gilbert</td>
+      <td>514.2</td>
+      <td>59.9</td>
+      <td>4.4</td>
+    </tr>
+    <tr>
+      <th>The Spy Who Loved Me</th>
+      <td>1977</td>
+      <td>Roger Moore</td>
+      <td>Lewis Gilbert</td>
+      <td>533.0</td>
+      <td>45.1</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>A View to a Kill</th>
+      <td>1985</td>
+      <td>Roger Moore</td>
+      <td>John Glen</td>
+      <td>275.2</td>
+      <td>54.5</td>
+      <td>9.1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Year</th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+    <tr>
+      <th>Film</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Dr. No</th>
+      <td>1962</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>448.8</td>
+      <td>7.0</td>
+      <td>0.6</td>
+    </tr>
+    <tr>
+      <th>From Russia with Love</th>
+      <td>1963</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>543.8</td>
+      <td>12.6</td>
+      <td>1.6</td>
+    </tr>
+    <tr>
+      <th>Goldfinger</th>
+      <td>1964</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>820.4</td>
+      <td>18.6</td>
+      <td>3.2</td>
+    </tr>
+    <tr>
+      <th>Thunderball</th>
+      <td>1965</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>848.1</td>
+      <td>41.9</td>
+      <td>4.7</td>
+    </tr>
+    <tr>
+      <th>Casino Royale</th>
+      <td>1967</td>
+      <td>David Niven</td>
+      <td>Ken Hughes</td>
+      <td>315.0</td>
+      <td>85.0</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Notice how the integer index syntax still works regardless of what we set our index to be!</p>
+<h4 id="Summary:">Summary:<a class="anchor-link" href="#Summary:"> </a></h4><ul>
+<li>You can slice a pandas dataframe in the same number of ways as you can slice python list. Just remember to use either <code>loc</code> or <code>iloc</code> accessor(s)!</li>
+<li>Remember to use <em>square brackets</em> while using these properties and not parantheses like we are so used to!</li>
+</ul>
+<h2 id="How-to-extract-columns-(and-rows)">How to extract columns (and rows)<a class="anchor-link" href="#How-to-extract-columns-(and-rows)"> </a></h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Year</th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+    <tr>
+      <th>Film</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>A View to a Kill</th>
+      <td>1985</td>
+      <td>Roger Moore</td>
+      <td>John Glen</td>
+      <td>275.2</td>
+      <td>54.5</td>
+      <td>9.1</td>
+    </tr>
+    <tr>
+      <th>Casino Royale</th>
+      <td>2006</td>
+      <td>Daniel Craig</td>
+      <td>Martin Campbell</td>
+      <td>581.5</td>
+      <td>145.3</td>
+      <td>3.3</td>
+    </tr>
+    <tr>
+      <th>Casino Royale</th>
+      <td>1967</td>
+      <td>David Niven</td>
+      <td>Ken Hughes</td>
+      <td>315.0</td>
+      <td>85.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>Diamonds Are Forever</th>
+      <td>1971</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>442.5</td>
+      <td>34.7</td>
+      <td>5.8</td>
+    </tr>
+    <tr>
+      <th>Die Another Day</th>
+      <td>2002</td>
+      <td>Pierce Brosnan</td>
+      <td>Lee Tamahori</td>
+      <td>465.4</td>
+      <td>154.2</td>
+      <td>17.9</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Die Another Day&#39;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Year                           2002
+Actor                Pierce Brosnan
+Director               Lee Tamahori
+Box Office                    465.4
+Budget                        154.2
+Bond Actor Salary              17.9
+Name: Die Another Day, dtype: object</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>What if we wanted to extract the actor information only? It's simple!</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Die Another Day&#39;</span><span class="p">,</span> <span class="s1">&#39;Actor&#39;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;Pierce Brosnan&#39;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now say we wanted to know the director as well as the box office returns for this movie? That's simple too!</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Die Another Day&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Director&#39;</span><span class="p">,</span> <span class="s1">&#39;Box Office&#39;</span><span class="p">]]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Director      Lee Tamahori
+Box Office           465.4
+Name: Die Another Day, dtype: object</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>What if we wanted this information for Moonraker movie as well?</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="s1">&#39;Moonraker&#39;</span><span class="p">,</span> <span class="s1">&#39;Die Another Day&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Director&#39;</span><span class="p">,</span> <span class="s1">&#39;Box Office&#39;</span><span class="p">]]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Director</th>
+      <th>Box Office</th>
+    </tr>
+    <tr>
+      <th>Film</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Moonraker</th>
+      <td>Lewis Gilbert</td>
+      <td>535.0</td>
+    </tr>
+    <tr>
+      <th>Die Another Day</th>
+      <td>Lee Tamahori</td>
+      <td>465.4</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Pandas is remarkably flexible with slicing is it is completely acceptable to do this:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Moonraker&#39;</span><span class="p">,</span> <span class="s1">&#39;Director&#39;</span><span class="p">:</span><span class="s1">&#39;Budget&#39;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Director      Lewis Gilbert
+Box Office              535
+Budget                 91.5
+Name: Moonraker, dtype: object</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Moonraker&#39;</span><span class="p">:</span><span class="s1">&#39;Thunderball&#39;</span><span class="p">,</span> <span class="s1">&#39;Director&#39;</span><span class="p">:</span><span class="s1">&#39;Budget&#39;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+    </tr>
+    <tr>
+      <th>Film</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Moonraker</th>
+      <td>Lewis Gilbert</td>
+      <td>535.0</td>
+      <td>91.5</td>
+    </tr>
+    <tr>
+      <th>Never Say Never Again</th>
+      <td>Irvin Kershner</td>
+      <td>380.0</td>
+      <td>86.0</td>
+    </tr>
+    <tr>
+      <th>Octopussy</th>
+      <td>John Glen</td>
+      <td>373.8</td>
+      <td>53.9</td>
+    </tr>
+    <tr>
+      <th>On Her Majesty's Secret Service</th>
+      <td>Peter R. Hunt</td>
+      <td>291.5</td>
+      <td>37.3</td>
+    </tr>
+    <tr>
+      <th>Quantum of Solace</th>
+      <td>Marc Forster</td>
+      <td>514.2</td>
+      <td>181.4</td>
+    </tr>
+    <tr>
+      <th>Skyfall</th>
+      <td>Sam Mendes</td>
+      <td>943.5</td>
+      <td>170.2</td>
+    </tr>
+    <tr>
+      <th>Spectre</th>
+      <td>Sam Mendes</td>
+      <td>726.7</td>
+      <td>206.3</td>
+    </tr>
+    <tr>
+      <th>The Living Daylights</th>
+      <td>John Glen</td>
+      <td>313.5</td>
+      <td>68.8</td>
+    </tr>
+    <tr>
+      <th>The Man with the Golden Gun</th>
+      <td>Guy Hamilton</td>
+      <td>334.0</td>
+      <td>27.7</td>
+    </tr>
+    <tr>
+      <th>The Spy Who Loved Me</th>
+      <td>Lewis Gilbert</td>
+      <td>533.0</td>
+      <td>45.1</td>
+    </tr>
+    <tr>
+      <th>The World Is Not Enough</th>
+      <td>Michael Apted</td>
+      <td>439.5</td>
+      <td>158.3</td>
+    </tr>
+    <tr>
+      <th>Thunderball</th>
+      <td>Terence Young</td>
+      <td>848.1</td>
+      <td>41.9</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Spectre&#39;</span><span class="p">:,</span> <span class="s1">&#39;Director&#39;</span><span class="p">:]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+    <tr>
+      <th>Film</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Spectre</th>
+      <td>Sam Mendes</td>
+      <td>726.7</td>
+      <td>206.3</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>The Living Daylights</th>
+      <td>John Glen</td>
+      <td>313.5</td>
+      <td>68.8</td>
+      <td>5.2</td>
+    </tr>
+    <tr>
+      <th>The Man with the Golden Gun</th>
+      <td>Guy Hamilton</td>
+      <td>334.0</td>
+      <td>27.7</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>The Spy Who Loved Me</th>
+      <td>Lewis Gilbert</td>
+      <td>533.0</td>
+      <td>45.1</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>The World Is Not Enough</th>
+      <td>Michael Apted</td>
+      <td>439.5</td>
+      <td>158.3</td>
+      <td>13.5</td>
+    </tr>
+    <tr>
+      <th>Thunderball</th>
+      <td>Terence Young</td>
+      <td>848.1</td>
+      <td>41.9</td>
+      <td>4.7</td>
+    </tr>
+    <tr>
+      <th>Tomorrow Never Dies</th>
+      <td>Roger Spottiswoode</td>
+      <td>463.2</td>
+      <td>133.9</td>
+      <td>10.0</td>
+    </tr>
+    <tr>
+      <th>You Only Live Twice</th>
+      <td>Lewis Gilbert</td>
+      <td>514.2</td>
+      <td>59.9</td>
+      <td>4.4</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:</span><span class="s1">&#39;Dr. No&#39;</span><span class="p">,</span> <span class="p">:</span><span class="s1">&#39;Budget&#39;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Year</th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+    </tr>
+    <tr>
+      <th>Film</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>A View to a Kill</th>
+      <td>1985</td>
+      <td>Roger Moore</td>
+      <td>John Glen</td>
+      <td>275.2</td>
+      <td>54.5</td>
+    </tr>
+    <tr>
+      <th>Casino Royale</th>
+      <td>2006</td>
+      <td>Daniel Craig</td>
+      <td>Martin Campbell</td>
+      <td>581.5</td>
+      <td>145.3</td>
+    </tr>
+    <tr>
+      <th>Casino Royale</th>
+      <td>1967</td>
+      <td>David Niven</td>
+      <td>Ken Hughes</td>
+      <td>315.0</td>
+      <td>85.0</td>
+    </tr>
+    <tr>
+      <th>Diamonds Are Forever</th>
+      <td>1971</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>442.5</td>
+      <td>34.7</td>
+    </tr>
+    <tr>
+      <th>Die Another Day</th>
+      <td>2002</td>
+      <td>Pierce Brosnan</td>
+      <td>Lee Tamahori</td>
+      <td>465.4</td>
+      <td>154.2</td>
+    </tr>
+    <tr>
+      <th>Dr. No</th>
+      <td>1962</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>448.8</td>
+      <td>7.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now predictably, we can extend this behaviour to integer indexes too.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">14</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;John Glen&#39;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">14</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Director      John Glen
+Box Office        373.8
+Budget             53.9
+Name: Octopussy, dtype: object</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">5</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Year</th>
+      <th>Actor</th>
+      <th>Director</th>
+    </tr>
+    <tr>
+      <th>Film</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>A View to a Kill</th>
+      <td>1985</td>
+      <td>Roger Moore</td>
+      <td>John Glen</td>
+    </tr>
+    <tr>
+      <th>Casino Royale</th>
+      <td>2006</td>
+      <td>Daniel Craig</td>
+      <td>Martin Campbell</td>
+    </tr>
+    <tr>
+      <th>Casino Royale</th>
+      <td>1967</td>
+      <td>David Niven</td>
+      <td>Ken Hughes</td>
+    </tr>
+    <tr>
+      <th>Diamonds Are Forever</th>
+      <td>1971</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+    </tr>
+    <tr>
+      <th>Die Another Day</th>
+      <td>2002</td>
+      <td>Pierce Brosnan</td>
+      <td>Lee Tamahori</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Summary:">Summary:<a class="anchor-link" href="#Summary:"> </a></h4><ul>
+<li>First argument to <code>loc</code> or <code>iloc</code> : rows</li>
+<li>Second argument to <code>loc</code> or <code>iloc</code> : columns</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Set-values">Set values<a class="anchor-link" href="#Set-values"> </a></h2><h3 id="Set-a-new-value-to-specific-cell">Set a new value to specific cell<a class="anchor-link" href="#Set-a-new-value-to-specific-cell"> </a></h3>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Year</th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+    <tr>
+      <th>Film</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>A View to a Kill</th>
+      <td>1985</td>
+      <td>Roger Moore</td>
+      <td>John Glen</td>
+      <td>275.2</td>
+      <td>54.5</td>
+      <td>9.1</td>
+    </tr>
+    <tr>
+      <th>Casino Royale</th>
+      <td>2006</td>
+      <td>Daniel Craig</td>
+      <td>Martin Campbell</td>
+      <td>581.5</td>
+      <td>145.3</td>
+      <td>3.3</td>
+    </tr>
+    <tr>
+      <th>Casino Royale</th>
+      <td>1967</td>
+      <td>David Niven</td>
+      <td>Ken Hughes</td>
+      <td>315.0</td>
+      <td>85.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>Diamonds Are Forever</th>
+      <td>1971</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>442.5</td>
+      <td>34.7</td>
+      <td>5.8</td>
+    </tr>
+    <tr>
+      <th>Die Another Day</th>
+      <td>2002</td>
+      <td>Pierce Brosnan</td>
+      <td>Lee Tamahori</td>
+      <td>465.4</td>
+      <td>154.2</td>
+      <td>17.9</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Dr. No&#39;</span><span class="p">,</span> <span class="s1">&#39;Actor&#39;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;Sean Connery&#39;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Dr. No&#39;</span><span class="p">,</span> <span class="s1">&#39;Actor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Sir Sean Connery&#39;</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Dr. No&#39;</span><span class="p">,</span> <span class="s1">&#39;Actor&#39;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;Sir Sean Connery&#39;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Say we wanted to replace multiple values inside the same row:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Dr. No&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Box Office&#39;</span><span class="p">,</span> <span class="s1">&#39;Budget&#39;</span><span class="p">,</span> <span class="s1">&#39;Bond Actor Salary&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">448000000</span><span class="p">,</span> <span class="mi">7000000</span><span class="p">,</span> <span class="mi">600000</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Dr. No&#39;</span><span class="p">,</span> <span class="s1">&#39;Box Office&#39;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>448000000.0</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Set-multiple-values-in-Dataframe">Set multiple values in Dataframe<a class="anchor-link" href="#Set-multiple-values-in-Dataframe"> </a></h3><p>Let's change Sean Connery's name to Sir Sean Connery</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./data/jamesbond.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="s1">&#39;Film&#39;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Actor&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Sean Connery&#39;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Year</th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+    <tr>
+      <th>Film</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Diamonds Are Forever</th>
+      <td>1971</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>442.5</td>
+      <td>34.7</td>
+      <td>5.8</td>
+    </tr>
+    <tr>
+      <th>From Russia with Love</th>
+      <td>1963</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>543.8</td>
+      <td>12.6</td>
+      <td>1.6</td>
+    </tr>
+    <tr>
+      <th>Goldfinger</th>
+      <td>1964</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>820.4</td>
+      <td>18.6</td>
+      <td>3.2</td>
+    </tr>
+    <tr>
+      <th>Never Say Never Again</th>
+      <td>1983</td>
+      <td>Sean Connery</td>
+      <td>Irvin Kershner</td>
+      <td>380.0</td>
+      <td>86.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>Thunderball</th>
+      <td>1965</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>848.1</td>
+      <td>41.9</td>
+      <td>4.7</td>
+    </tr>
+    <tr>
+      <th>You Only Live Twice</th>
+      <td>1967</td>
+      <td>Sean Connery</td>
+      <td>Lewis Gilbert</td>
+      <td>514.2</td>
+      <td>59.9</td>
+      <td>4.4</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">connery_mask</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Actor&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Sean Connery&#39;</span>
+<span class="n">df</span><span class="p">[</span><span class="n">connery_mask</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Year</th>
+      <th>Actor</th>
+      <th>Director</th>
+      <th>Box Office</th>
+      <th>Budget</th>
+      <th>Bond Actor Salary</th>
+    </tr>
+    <tr>
+      <th>Film</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Diamonds Are Forever</th>
+      <td>1971</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>442.5</td>
+      <td>34.7</td>
+      <td>5.8</td>
+    </tr>
+    <tr>
+      <th>From Russia with Love</th>
+      <td>1963</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>543.8</td>
+      <td>12.6</td>
+      <td>1.6</td>
+    </tr>
+    <tr>
+      <th>Goldfinger</th>
+      <td>1964</td>
+      <td>Sean Connery</td>
+      <td>Guy Hamilton</td>
+      <td>820.4</td>
+      <td>18.6</td>
+      <td>3.2</td>
+    </tr>
+    <tr>
+      <th>Never Say Never Again</th>
+      <td>1983</td>
+      <td>Sean Connery</td>
+      <td>Irvin Kershner</td>
+      <td>380.0</td>
+      <td>86.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>Thunderball</th>
+      <td>1965</td>
+      <td>Sean Connery</td>
+      <td>Terence Young</td>
+      <td>848.1</td>
+      <td>41.9</td>
+      <td>4.7</td>
+    </tr>
+    <tr>
+      <th>You Only Live Twice</th>
+      <td>1967</td>
+      <td>Sean Connery</td>
+      <td>Lewis Gilbert</td>
+      <td>514.2</td>
+      <td>59.9</td>
+      <td>4.4</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Wrong-way-to-replace-values">Wrong way to replace values<a class="anchor-link" href="#Wrong-way-to-replace-values"> </a></h4>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="n">connery_mask</span><span class="p">][</span><span class="s1">&#39;Actor&#39;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Film
+Diamonds Are Forever     Sean Connery
+From Russia with Love    Sean Connery
+Goldfinger               Sean Connery
+Never Say Never Again    Sean Connery
+Thunderball              Sean Connery
+You Only Live Twice      Sean Connery
+Name: Actor, dtype: object</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="n">connery_mask</span><span class="p">][</span><span class="s1">&#39;Actor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Sir Sean Connery&#39;</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/Users/h20/anaconda3/lib/python3.7/site-packages/ipykernel_launcher.py:1: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  &#34;&#34;&#34;Entry point for launching an IPython kernel.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="n">connery_mask</span><span class="p">][</span><span class="s1">&#39;Actor&#39;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Film
+Diamonds Are Forever     Sean Connery
+From Russia with Love    Sean Connery
+Goldfinger               Sean Connery
+Never Say Never Again    Sean Connery
+Thunderball              Sean Connery
+You Only Live Twice      Sean Connery
+Name: Actor, dtype: object</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Nothing changed. Why? If you read the warning it says a value is trying to be set on a <em>copy</em> of a dataframe. That's the problem here. We want our changes to be reflected on the original dataframe and not a copy of it!</p>
+<h4 id="Right-way-to-change-values">Right way to change values<a class="anchor-link" href="#Right-way-to-change-values"> </a></h4>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">connery_mask</span><span class="p">,</span> <span class="s1">&#39;Actor&#39;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Film
+Diamonds Are Forever     Sean Connery
+From Russia with Love    Sean Connery
+Goldfinger               Sean Connery
+Never Say Never Again    Sean Connery
+Thunderball              Sean Connery
+You Only Live Twice      Sean Connery
+Name: Actor, dtype: object</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">connery_mask</span><span class="p">,</span> <span class="s1">&#39;Actor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Sir Sean Connery&#39;</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">connery_mask</span><span class="p">,</span> <span class="s1">&#39;Actor&#39;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Film
+Diamonds Are Forever     Sir Sean Connery
+From Russia with Love    Sir Sean Connery
+Goldfinger               Sir Sean Connery
+Never Say Never Again    Sir Sean Connery
+Thunderball              Sir Sean Connery
+You Only Live Twice      Sir Sean Connery
+Name: Actor, dtype: object</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Hopefully this tutorial was helpful in someway! Check out part II of this tutorial to learn how to rename columns/index labels, delete rows and columns, filter dataframes, using the apply function and more!!</p>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><a class="u-url" href="/2021/08/11/DAP_Dataframes3.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Data Science blog by Dinesh Kesaboina</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/iscreampy" title="iscreampy"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/iscreampy" title="iscreampy"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
