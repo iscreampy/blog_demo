@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
-<loc>https://www.iscreampy.com/markdown/2020/01/14/test-markdown-post.html</loc>
+<loc>https://www.iscreampy.com/blog_demo/markdown/2020/01/14/test-markdown-post.html</loc>
 <lastmod>2020-01-14T00:00:00-06:00</lastmod>
 </url>
 <url>
-<loc>https://www.iscreampy.com/2021/06/10/first_post.html</loc>
+<loc>https://www.iscreampy.com/blog_demo/2021/06/10/first_post.html</loc>
 <lastmod>2021-06-10T00:00:00-05:00</lastmod>
 </url>
 <url>
-<loc>https://www.iscreampy.com/about/</loc>
+<loc>https://www.iscreampy.com/blog_demo/about/</loc>
 </url>
 <url>
-<loc>https://www.iscreampy.com/</loc>
+<loc>https://www.iscreampy.com/blog_demo/</loc>
 </url>
 <url>
-<loc>https://www.iscreampy.com/search/</loc>
+<loc>https://www.iscreampy.com/blog_demo/search/</loc>
 </url>
 <url>
-<loc>https://www.iscreampy.com/categories/</loc>
+<loc>https://www.iscreampy.com/blog_demo/categories/</loc>
 </url>
 </urlset>
