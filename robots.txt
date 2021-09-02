@@ -1,1 +1,1 @@
-Sitemap: iscreampy.com/sitemap.xml
+Sitemap: https://www.iscreampy.com/sitemap.xml
